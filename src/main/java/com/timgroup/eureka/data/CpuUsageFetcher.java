@@ -1,4 +1,4 @@
-package eureka;
+package com.timgroup.eureka.data;
 
 import static com.google.common.collect.Iterables.getLast;
 import static java.lang.String.format;
