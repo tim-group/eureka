@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="output" path="bin"/>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
-	<classpathentry sourcepath="/home/tdenley/.gradle/caches/artifacts-26/filestore/com.fasterxml.jackson.core/jackson-core/2.2.3/source/b1c4a6c3c26dfc425efd53c00217868b60d07de9/jackson-core-2.2.3-sources.jar" kind="lib" path="/home/tdenley/.gradle/caches/artifacts-26/filestore/com.fasterxml.jackson.core/jackson-core/2.2.3/jar/1a0113da2cab5f4c216b4e5e7c1dbfaa67087e14/jackson-core-2.2.3.jar" exported="true"/>
-	<classpathentry kind="lib" path="/home/tdenley/.m2/repository/junit/junit/4.11/junit-4.11.jar" exported="true"/>
-	<classpathentry kind="lib" path="/home/tdenley/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" exported="true"/>
-</classpath>

@@ -2,6 +2,7 @@
 /build
 /out
 /.gradle
+/.classpath
 /.idea/workspace.xml
 /.idea/tasks.xml
 *.swp
