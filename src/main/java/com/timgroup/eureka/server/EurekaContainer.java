@@ -5,8 +5,8 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
 
-import com.timgroup.eureka.server.responders.DynamicResourceResponder;
 import com.timgroup.eureka.server.responders.StaticResourceResponder;
+import com.timgroup.eureka.server.responders.StatusJsonResponder;
 
 public final class EurekaContainer implements Container {
 
@@ -16,9 +16,8 @@ public final class EurekaContainer implements Container {
         if (path.length == 0) {
             return new StaticResourceResponder("/content/index.html");
         }
-        if ("api".equals(path[0])) {
-            return new StaticResourceResponder("/api/" + path[1]);
-//            return new DynamicResourceResponder(path[1]);
+        if ("api".equals(path[0]) && "status.json".equals(path[1])) {
+            return new StatusJsonResponder();
         }
         return new StaticResourceResponder("/content/" + path[0]);
     }
