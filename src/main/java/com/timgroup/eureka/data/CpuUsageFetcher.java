@@ -1,7 +1,6 @@
 package com.timgroup.eureka.data;
 
 import static com.google.common.collect.Iterables.getLast;
-import static java.lang.String.format;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +8,12 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,8 +21,15 @@ import com.google.gson.JsonParser;
 
 public class CpuUsageFetcher {
 
-    public static void main(String[] args) throws Exception {
-        String serverName = "production-ideasfxapp-???_mgmt_pg_net_local";
+    private static final ImmutableMap<String, String> TARGETS = ImmutableMap.of(
+            "FX", "production-ideasfxapp-???_mgmt_pg_net_local",
+            "FR", "pg-frapp-???_mgmt_pg_net_local");
+    
+    public static BigDecimal fetch(String app) {
+        return Ordering.<BigDecimal>natural().max(fetchFor(TARGETS.get(app)));
+    }
+    
+    private static List<BigDecimal> fetchFor(String serverName)  {
         String cpuIdleMetricName = "collectd." + serverName + ".cpu-?.cpu-idle";
         
         String url = "https://metrics.timgroup.com/render?target=" + cpuIdleMetricName + "&format=json&from=-60s";
@@ -27,16 +37,19 @@ public class CpuUsageFetcher {
         
         JsonParser parser = new JsonParser();
         JsonArray targets = parser.parse(data).getAsJsonArray();
+        
+        List<BigDecimal> cpuUsages = Lists.newArrayList();
         for (JsonElement target : targets) {
             JsonObject targetObject = target.getAsJsonObject();
-            String targetName = targetObject.get("target").getAsString();
             JsonArray datapoints = targetObject.get("datapoints").getAsJsonArray();
             BigDecimal cpuIdle = Iterables.get(getLast(datapoints).getAsJsonArray(), 0).getAsBigDecimal();
-            System.out.println(format("%s, %s", targetName, BigDecimal.ONE.scaleByPowerOfTen(2).subtract(cpuIdle)));
+            BigDecimal cpuUsage = BigDecimal.ONE.scaleByPowerOfTen(2).subtract(cpuIdle);
+            cpuUsages.add(cpuUsage);
         }
+        return cpuUsages;
     }
 
-    public static String call(String urlString) throws IOException {
+    public static String call(String urlString) {
         try {
             final URL url = new URL(urlString);
             final HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -56,7 +69,7 @@ public class CpuUsageFetcher {
             throw new IllegalStateException(e);
         }
     }
-    
+
 }
 
 //"collectd.production-ideasfxapp-001_mgmt_pg_net_local.cpu-0.cpu-system"

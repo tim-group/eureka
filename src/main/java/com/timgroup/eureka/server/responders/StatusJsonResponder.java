@@ -2,7 +2,6 @@ package com.timgroup.eureka.server.responders;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Random;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -12,15 +11,16 @@ import org.simpleframework.http.core.Container;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializer;
 import com.google.gson.internal.Streams;
-import com.google.gson.stream.JsonWriter;
+import com.timgroup.eureka.data.CpuStatusChecker;
 
 public final class StatusJsonResponder implements Container {
+    
+    private final CpuStatusChecker cpuStatusChecker;
 
     public StatusJsonResponder() {
+        cpuStatusChecker = new CpuStatusChecker();
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class StatusJsonResponder implements Container {
         for (String app : apps) {
             JsonObject appStatus = new JsonObject();
             appStatus.addProperty("name", app);
-            appStatus.addProperty("error", new Random().nextInt(2) == 0 ? "" : "AGHHH");
+            appStatus.addProperty("error", cpuStatusChecker.cpuStatusOf(app));
             status.add(appStatus);
         }
 
