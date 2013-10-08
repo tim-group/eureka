@@ -19,7 +19,7 @@ import com.google.gson.JsonParser;
 public class CpuUsageFetcher {
 
     public static void main(String[] args) throws Exception {
-        String serverName = "production-ideasfxapp-001_mgmt_pg_net_local";
+        String serverName = "production-ideasfxapp-???_mgmt_pg_net_local";
         String cpuIdleMetricName = "collectd." + serverName + ".cpu-?.cpu-idle";
         
         String url = "https://metrics.timgroup.com/render?target=" + cpuIdleMetricName + "&format=json&from=-60s";
@@ -32,7 +32,7 @@ public class CpuUsageFetcher {
             String targetName = targetObject.get("target").getAsString();
             JsonArray datapoints = targetObject.get("datapoints").getAsJsonArray();
             BigDecimal cpuIdle = Iterables.get(getLast(datapoints).getAsJsonArray(), 0).getAsBigDecimal();
-            System.out.println(format("%s, %s", targetName, cpuIdle));
+            System.out.println(format("%s, %s", targetName, BigDecimal.ONE.scaleByPowerOfTen(2).subtract(cpuIdle)));
         }
     }
 
