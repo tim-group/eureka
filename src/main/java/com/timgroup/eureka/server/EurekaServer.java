@@ -26,10 +26,9 @@ public class EurekaServer {
         final SocketAddress socketAddress = connection.connect(address);
         
         if (socketAddress instanceof InetSocketAddress) {
-            System.out.format("Starting CI-Eye server on http://localhost:%d", ((InetSocketAddress)socketAddress).getPort());
+            System.out.format("Starting Eureka server on http://localhost:%d", ((InetSocketAddress)socketAddress).getPort());
             return;
         }
-        
-        System.out.format("Starting CI-Eye server on: %s", socketAddress.toString());
+        System.out.format("Starting Eureka server on: %s", socketAddress.toString());
     }
 }
