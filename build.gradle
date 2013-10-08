@@ -12,7 +12,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
+    compile 'com.google.guava:guava:15.0'
+    compile 'com.google.code.gson:gson:2.2.4'
 
     testCompile 'junit:junit:4.11'
 }
