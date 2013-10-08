@@ -1,9 +1,6 @@
 package com.timgroup.eureka.data;
 
-import static java.math.RoundingMode.HALF_UP;
-
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
 
