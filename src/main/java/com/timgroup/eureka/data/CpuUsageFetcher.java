@@ -1,6 +1,9 @@
 package com.timgroup.eureka.data;
 
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.transform;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +13,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -42,11 +48,36 @@ public class CpuUsageFetcher {
         for (JsonElement target : targets) {
             JsonObject targetObject = target.getAsJsonObject();
             JsonArray datapoints = targetObject.get("datapoints").getAsJsonArray();
-            BigDecimal cpuIdle = Iterables.get(getLast(datapoints).getAsJsonArray(), 0).getAsBigDecimal();
+            
+            BigDecimal cpuIdle = getLast(transform(filter(transform(datapoints, toCpuUsageElement()), not(jsonNull())), toBigDecimal()));
             BigDecimal cpuUsage = BigDecimal.ONE.scaleByPowerOfTen(2).subtract(cpuIdle);
             cpuUsages.add(cpuUsage);
         }
         return cpuUsages;
+    }
+
+    private static Function<JsonElement, BigDecimal> toBigDecimal() {
+        return new Function<JsonElement, BigDecimal>() {
+            @Override public BigDecimal apply(JsonElement input) {
+                return input.getAsBigDecimal();
+            }
+        };
+    }
+
+    private static Predicate<JsonElement> jsonNull() {
+        return new Predicate<JsonElement>() {
+            @Override public boolean apply(JsonElement input) {
+                return input.isJsonNull();
+            }
+        };
+    }
+
+    private static Function<JsonElement, JsonElement> toCpuUsageElement() {
+        return new Function<JsonElement, JsonElement>() {
+            @Override public JsonElement apply(JsonElement input) {
+                return input.getAsJsonArray().get(0);
+            }
+        };
     }
 
     public static String call(String urlString) {
