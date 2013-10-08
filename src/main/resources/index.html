@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<title>Eureka</title>
+
+<style>
+    body {
+        background-color: #333333;
+        margin: 0;
+    }
+
+    .app {
+        display: inline-block;
+        padding: 50px;
+        margin: 10px 0 0 10px;
+
+        font-size: 12vw;
+        color: #ffffff;
+        font-family: Verdana, sans-serif;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .GREEN {
+        background-color: #00aa00;
+    }
+
+    .BROKEN {
+        background-color: #aa0000;
+    }
+</style>
+
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<script>
+
+    function render(err, json) {
+        if(err) {
+            console.error(err);
+            return;
+        }
+
+        // join
+        var app = d3.selectAll("div.app")
+            .data(json);
+
+        // update
+        //app.attr("class", "app BROKEN");
+
+        // enter
+        app.enter()
+            .append("div")
+            .classed("app", true);
+
+        // enter & update
+        app
+            .text(function(d) { return d.name; })
+            .classed("GREEN", function(d) {
+                return d.error === "";
+            })
+            .classed("BROKEN", function(d) {
+                return d.error !== "";
+            });
+
+        // exit
+        app.exit()
+            .remove();
+    }
+
+    function refresh() {
+        d3.json("status.json?" + (new Date()).getTime(), render);
+    }
+
+    refresh();
+    setInterval(refresh, 2000);
+</script>
+
+<body>
+</body>

@@ -1,0 +1,11 @@
+[
+    {
+        "name": "FX",
+        "error": ""
+    },
+    {
+        "name": "FR",
+        "error": "CPU Usage > 50%"
+    }
+]
+
