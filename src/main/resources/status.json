@@ -1,11 +1,23 @@
 [
     {
         "name": "FX",
-        "error": ""
+        "error": "1"
     },
     {
         "name": "FR",
-        "error": "CPU Usage > 50%"
+        "error": ""
+    },
+    {
+        "name": "EQ",
+        "error": "1"
+    },
+    {
+        "name": "TF",
+        "error": ""
+    },
+    {
+        "name": "PM",
+        "error": "1"
     }
 ]
 
