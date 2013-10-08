@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "folder_exclude_patterns": [
+                ".target",
+                "bin",
+                "eclipse-output",
+                "logs",
+                "project/project/target",
+                "project/target",
+                "target"
+            ],
+            "path": "."
+        }
+    ],
+    "settings": {
+        "tab_size": 4
+    }
+}
