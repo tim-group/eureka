@@ -69,7 +69,7 @@
     }
 
     function refresh() {
-        d3.json("status.json?" + (new Date()).getTime(), render);
+        d3.json("/api/status.json?" + (new Date()).getTime(), render);
     }
 
     refresh();
