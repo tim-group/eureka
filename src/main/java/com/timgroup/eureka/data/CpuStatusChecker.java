@@ -1,6 +1,10 @@
 package com.timgroup.eureka.data;
 
+import static java.math.RoundingMode.HALF_UP;
+
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Function;
@@ -20,8 +24,11 @@ public final class CpuStatusChecker {
         }));
 
     public String cpuStatusOf(String app) {
-        if (new BigDecimal("50").compareTo(cpuUsage.getUnchecked(app)) < 0) {
-            return "AGHH";
+        BigDecimal usage = cpuUsage.getUnchecked(app);
+        String limit = "50";
+        
+        if (new BigDecimal(limit).compareTo(usage) < 0) {
+            return String.format("CPU usage (%s%%) greater than %s%%", usage.setScale(0, RoundingMode.HALF_UP), limit);
         }
         return "";
     }
