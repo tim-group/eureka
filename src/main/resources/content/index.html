@@ -2,7 +2,7 @@
 
 <title>Eureka</title>
 
-<link href='//fonts.googleapis.com/css?family=Inconsolata:700' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
 <style>
     body {
@@ -15,11 +15,20 @@
         padding: 50px;
         margin: 10px 0 0 10px;
         
-        font-size: 12vw;
         color: #ffffff;
         font-family: 'Inconsolata', sans-serif;
-        font-weight: bold;
         text-align: center;
+    }
+
+
+    .app .title {
+        font-size: 12vw;
+        font-weight: bold;
+    }
+
+    .app .reason {
+        font-size: 1vw;
+        font-weight: normal;
     }
 
     .GREEN {
@@ -46,16 +55,22 @@
             .data(json);
 
         // update
-        //app.attr("class", "app BROKEN");
+        //app.
 
         // enter
-        app.enter()
+        var e = app.enter()
             .append("div")
             .classed("app", true);
+        
+        e.append("div")
+            .classed("title", true)
+            .text(function(d) { return d.name; });
 
+        e.append("div")
+            .classed("reason", true);
+        
         // enter & update
         app
-            .text(function(d) { return d.name; })
             .classed("GREEN", function(d) {
                 return d.error === "";
             })
@@ -63,6 +78,9 @@
                 return d.error !== "";
             });
 
+        app.select(".reason")
+            .text(function(d) { return d.error || "..."; });
+        
         // exit
         app.exit()
             .remove();
