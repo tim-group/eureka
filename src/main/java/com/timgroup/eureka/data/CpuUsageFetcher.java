@@ -15,9 +15,7 @@ import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.gson.JsonArray;
@@ -29,6 +27,8 @@ public class CpuUsageFetcher {
 
     private static final ImmutableMap<String, String> TARGETS = ImmutableMap.of(
             "FX", "production-ideasfxapp-???_mgmt_pg_net_local",
+            "EQ", "pg-timapp-???_pgldn_youdevise_com",
+            "PM", "pg-dpmapp-???_mgmt_pg_net_local",
             "FR", "pg-frapp-???_mgmt_pg_net_local");
     
     public static BigDecimal fetch(String app) {
@@ -36,7 +36,7 @@ public class CpuUsageFetcher {
     }
     
     private static List<BigDecimal> fetchFor(String serverName)  {
-        String cpuIdleMetricName = "collectd." + serverName + ".cpu-?.cpu-idle";
+        String cpuIdleMetricName = "collectd." + serverName + ".cpu-*.cpu-idle";
         
         String url = "https://metrics.timgroup.com/render?target=" + cpuIdleMetricName + "&format=json&from=-60s";
         String data = call(url);

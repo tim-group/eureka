@@ -30,7 +30,7 @@ public final class StatusJsonResponder implements Container {
         resp.setDate("Date", System.currentTimeMillis());
         resp.setStatus(Status.OK);
         
-        ImmutableList<String> apps = ImmutableList.of("FX", "FR");
+        ImmutableList<String> apps = ImmutableList.of("FX", "FR", "EQ", "PM");
         JsonArray status = new JsonArray();
         for (String app : apps) {
             JsonObject appStatus = new JsonObject();
