@@ -5,5 +5,6 @@
 /.classpath
 /.idea/workspace.xml
 /.idea/tasks.xml
+/eureka.sublime-workspace
 *.swp
 *.*~
