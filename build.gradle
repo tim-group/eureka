@@ -56,12 +56,14 @@ packaging {
     baseDir      = "$buildDir/libs"
     prefix       = '/opt/eureka'
     extraOptions = [
-        '--vendor':       'TIM Group',
-        '--maintainer':   'Francesco Gigli <francesco.gigli@timgroup.com',
+        '--name': 'timgroup-eureka',
+        '--maintainer': 'Francesco Gigli <francesco.gigli@timgroup.com>',
         '--architecture': 'all',
-        '--version':      '0.0.1',
-        '--iteration':    project.ext.iteration
-        ]
+        '--version': '0.0.1',
+        '--iteration': project.ext.iteration,
+        '--url': 'https://github.com/youdevise/eureka',
+        '--description': 'reactive monitoring for production'
+    ]
     filesArgs    = ['eureka.jar']
     force        = false
 }
