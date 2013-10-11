@@ -1,5 +1,17 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
+buildscript {
+    repositories {
+        mavenLocal()
+        if (project.hasProperty('repoUrl')) {
+            mavenRepo url: "${project.repoUrl}/groups/public"
+        }
+        else {
+            mavenCentral()
+        }
+    }
+    dependencies {
+        classpath 'com.kenshoo:gradle-fpm:0.4'
+    }
+}
 
 repositories {
     mavenLocal()
@@ -10,6 +22,10 @@ repositories {
         mavenCentral()
     }
 }
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'fpm-packaging'
 
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -22,3 +38,32 @@ dependencies {
 
     testCompile 'junit:junit:4.11'
 }
+
+project.ext.iteration = System.getenv("BUILD_NUMBER")
+
+if (!project.ext.iteration) {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--short", "HEAD"
+        standardOutput = stdout
+    }
+
+    project.ext.iteration = "$stdout".trim()
+}
+
+packaging {
+    dependencies = []
+    baseDir      = "$buildDir/libs"
+    prefix       = '/opt/eureka'
+    extraOptions = [
+        '--vendor':       'TIM Group',
+        '--maintainer':   'Francesco Gigli <francesco.gigli@timgroup.com',
+        '--architecture': 'all',
+        '--version':      '0.0.1',
+        '--iteration':    project.ext.iteration
+        ]
+    filesArgs    = ['eureka.jar']
+    force        = false
+}
+
+debian.dependsOn jar
