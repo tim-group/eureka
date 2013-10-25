@@ -14,7 +14,7 @@
         display: inline-block;
         padding: 50px;
         margin: 10px 0 0 10px;
-        
+
         color: #ffffff;
         font-family: 'Inconsolata', sans-serif;
         text-align: center;
@@ -47,7 +47,13 @@
     function render(err, json) {
         if(err) {
             console.error(err);
-            return;
+
+            json = [
+                {
+                    "name": "ME",
+                    "error": err
+                }
+            ];
         }
 
         // join
@@ -61,14 +67,13 @@
         var e = app.enter()
             .append("div")
             .classed("app", true);
-        
+
         e.append("div")
-            .classed("title", true)
-            .text(function(d) { return d.name; });
+            .classed("title", true);
 
         e.append("div")
             .classed("reason", true);
-        
+
         // enter & update
         app
             .classed("GREEN", function(d) {
@@ -80,7 +85,10 @@
 
         app.select(".reason")
             .text(function(d) { return d.error || "..."; });
-        
+
+        app.select(".title")
+            .text(function(d) { return d.name; });
+
         // exit
         app.exit()
             .remove();
