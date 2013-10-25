@@ -29,6 +29,10 @@ apply plugin: 'fpm-packaging'
 
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
+    from("src/main/java") {
+        include "**/*.properties"
+    }
 }
 
 dependencies {
