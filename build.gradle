@@ -26,6 +26,11 @@ repositories {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'fpm-packaging'
+apply plugin: 'application'
+
+mainClassName = "com.timgroup.eureka.Eureka"
+
+manifest.mainAttributes("Main-Class" : mainClassName)
 
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

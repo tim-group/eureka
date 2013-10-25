@@ -7,10 +7,15 @@ Monitoring Capacity
 How to run locally
 ------------------
 
+The jar is runnable:
+
     gradle jar
-    java -cp build/libs/eureka.jar com.timgroup.eureka.Eureka
+    java -jar build/libs/eureka.jar
 
 You can also specify a port number:
 
-    java -cp build/libs/eureka.jar com.timgroup.eureka.Eureka 12345
+    java -jar build/libs/eureka.jar 12345
 
+Or use gradle application run:
+
+    gradle run
