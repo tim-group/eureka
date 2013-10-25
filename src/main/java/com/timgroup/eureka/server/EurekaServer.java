@@ -15,7 +15,7 @@ public class EurekaServer {
     private final Container container = new EurekaContainer();
     private final Connection connection;
     private final InetSocketAddress address;
-    
+
     public EurekaServer(int port) throws IOException {
         final Server server = new ContainerServer(container);
         connection = new SocketConnection(server);
@@ -24,9 +24,9 @@ public class EurekaServer {
 
     public void start() throws IOException {
         final SocketAddress socketAddress = connection.connect(address);
-        
+
         if (socketAddress instanceof InetSocketAddress) {
-            System.out.format("Starting Eureka server on http://localhost:%d", ((InetSocketAddress)socketAddress).getPort());
+            System.out.format("Starting Eureka server on http://localhost:%d\n", ((InetSocketAddress)socketAddress).getPort());
             return;
         }
         System.out.format("Starting Eureka server on: %s", socketAddress.toString());
