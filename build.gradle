@@ -48,6 +48,8 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
+project.sourceCompatibility = "1.5"
+project.targetCompatibility = "1.5"
 project.ext.iteration = System.getenv("BUILD_NUMBER")
 
 if (!project.ext.iteration) {
@@ -60,10 +62,25 @@ if (!project.ext.iteration) {
     project.ext.iteration = "$stdout".trim()
 }
 
+def stagingDir = new File(project.buildDir, "staging")
+
+task stageFiles(type: Copy) {
+    stagingDir.mkdir()
+
+    into new File(stagingDir, "/opt/eureka")
+    from "build/libs"
+
+    into ('../../etc/init') {
+        from 'etc/init/'
+    }
+}
+
+stageFiles.dependsOn jar
+
 packaging {
     dependencies = []
-    baseDir      = "$buildDir/libs"
-    prefix       = '/opt/eureka'
+    baseDir      = stagingDir
+    force        = false
     extraOptions = [
         '--name': 'timgroup-eureka',
         '--maintainer': 'Francesco Gigli <francesco.gigli@timgroup.com>',
@@ -71,10 +88,8 @@ packaging {
         '--version': '0.0.1',
         '--iteration': project.ext.iteration,
         '--url': 'https://github.com/youdevise/eureka',
-        '--description': 'reactive monitoring for production'
+        '--description': 'Monitoring Capacity'
     ]
-    filesArgs    = ['eureka.jar']
-    force        = false
 }
 
-debian.dependsOn jar
+debian.dependsOn stageFiles
