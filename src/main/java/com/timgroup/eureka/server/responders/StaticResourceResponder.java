@@ -3,7 +3,8 @@ package com.timgroup.eureka.server.responders;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ResourceBundle;
+import java.util.Map;
+import java.util.Hashtable;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -15,7 +16,19 @@ import com.google.common.io.Closeables;
 
 public final class StaticResourceResponder implements Container {
 
-    private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(StaticResourceResponder.class.getName());
+    private static final Map<String, String> MIME_TYPES = new Hashtable<String, String>() {{
+        put("html", "text/html; charset=utf-8");
+        put("js",   "text/javascript; charset=utf-8");
+        put("css",  "text/css; charset=utf-8");
+        put("json", "application/json; charset=utf-8");
+        put("ico",  "image/x-icon");
+        put("jpg",  "image/jpeg");
+        put("png",  "image/png");
+        put("gif",  "image/gif");
+        put("ogg",  "audio/ogg");
+        put("mp3",  "audio/mpeg");
+        put("wav",  "audio/wav");
+    }};
 
     private final String name;
     private final String mimeType;
@@ -23,11 +36,13 @@ public final class StaticResourceResponder implements Container {
     public StaticResourceResponder(String name) {
         this.name = name;
         final String extension = name.substring(name.lastIndexOf('.') + 1);
-        mimeType = MIME_TYPES.getString(extension);
+        mimeType = MIME_TYPES.get(extension);
     }
 
     @Override
     public void handle(Request req, Response resp) {
+        System.out.println("Handling request..");
+
         resp.setValue("Content-Type", mimeType);
         resp.setValue("Server", "Eureka/1.0 (Simple 5.1.6)");
         resp.setDate("Date", System.currentTimeMillis());

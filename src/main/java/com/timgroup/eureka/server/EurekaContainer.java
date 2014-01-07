@@ -12,7 +12,6 @@ public final class EurekaContainer implements Container {
 
     private Container route(Address target) {
         final String[] path = target.getPath().getSegments();
-        
         if (path.length == 0) {
             return new StaticResourceResponder("/content/index.html");
         }
@@ -24,6 +23,11 @@ public final class EurekaContainer implements Container {
 
     @Override
     public void handle(Request req, Response resp) {
-        route(req.getAddress()).handle(req, resp);
+        try {
+            route(req.getAddress()).handle(req, resp);
+        } catch (Exception e) {
+            System.out.println("Exception occurred while serving request:\n" +req.toString());
+            e.printStackTrace();
+        }
     }
 }
