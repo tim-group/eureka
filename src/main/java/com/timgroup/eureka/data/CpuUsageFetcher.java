@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -30,28 +31,32 @@ public class CpuUsageFetcher {
             "EQ", "pg-timapp-???_pgldn_youdevise_com",
             "PM", "pg-dpmapp-???_mgmt_pg_net_local",
             "FR", "pg-frapp-???_mgmt_pg_net_local");
-    
+
     public static BigDecimal fetch(String app) {
         return Ordering.<BigDecimal>natural().max(fetchFor(TARGETS.get(app)));
     }
-    
+
     private static List<BigDecimal> fetchFor(String serverName)  {
         String cpuIdleMetricName = "collectd." + serverName + ".cpu-*.cpu-idle";
-        
+
         String url = "https://metrics.timgroup.com/render?target=" + cpuIdleMetricName + "&format=json&from=-60s";
         String data = call(url);
-        
+
         JsonParser parser = new JsonParser();
         JsonArray targets = parser.parse(data).getAsJsonArray();
-        
+
         List<BigDecimal> cpuUsages = Lists.newArrayList();
         for (JsonElement target : targets) {
             JsonObject targetObject = target.getAsJsonObject();
             JsonArray datapoints = targetObject.get("datapoints").getAsJsonArray();
-            
-            BigDecimal cpuIdle = getLast(transform(filter(transform(datapoints, toCpuUsageElement()), not(jsonNull())), toBigDecimal()));
-            BigDecimal cpuUsage = BigDecimal.ONE.scaleByPowerOfTen(2).subtract(cpuIdle);
-            cpuUsages.add(cpuUsage);
+
+            try {
+                BigDecimal cpuIdle = getLast(transform(filter(transform(datapoints, toCpuUsageElement()), not(jsonNull())), toBigDecimal()));
+                BigDecimal cpuUsage = BigDecimal.ONE.scaleByPowerOfTen(2).subtract(cpuIdle);
+                cpuUsages.add(cpuUsage);
+            } catch (NoSuchElementException e) {
+                // System.out.println("No value available for target " + target.toString());
+            }
         }
         return cpuUsages;
     }
@@ -87,7 +92,7 @@ public class CpuUsageFetcher {
             conn.setInstanceFollowRedirects(false);
             final int responseCode = conn.getResponseCode();
             final BufferedReader in = new BufferedReader(new InputStreamReader(responseCode >= 400 ? conn.getErrorStream() : conn.getInputStream()));
-            
+
             final StringBuilder responseText = new StringBuilder();
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
