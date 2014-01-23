@@ -21,11 +21,15 @@ public final class CpuStatusChecker {
         }));
 
     public String cpuStatusOf(String app) {
-        BigDecimal usage = cpuUsage.getUnchecked(app);
-        String limit = "50";
-        
-        if (new BigDecimal(limit).compareTo(usage) < 0) {
-            return String.format("CPU usage (%s%%) greater than %s%%", usage.setScale(0, RoundingMode.HALF_UP), limit);
+        try {
+            BigDecimal usage = cpuUsage.getUnchecked(app);
+            String limit = "50";
+
+            if (new BigDecimal(limit).compareTo(usage) < 0) {
+                return String.format("CPU usage (%s%%) greater than %s%%", usage.setScale(0, RoundingMode.HALF_UP), limit);
+            }
+        } catch (Exception ignored) {
+            return "N/A";
         }
         return "";
     }
