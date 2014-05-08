@@ -57,7 +57,7 @@ public final class StaticResourceResponder implements Container {
             input = getClass().getResourceAsStream(name);
             output = resp.getOutputStream();
             ByteStreams.copy(input, output);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         finally {
