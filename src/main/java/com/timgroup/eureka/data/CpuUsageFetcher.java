@@ -29,7 +29,7 @@ public class CpuUsageFetcher {
     private static final ImmutableMap<String, String> TARGETS = new ImmutableMap.Builder<String, String>()
             .put("FX", "production-ideasfxapp-???_mgmt_pg_net_local")
             .put("EQ", "pg-timapp-???_pgldn_youdevise_com")
-            .put("PM", "pg-dpmapp-???_mgmt_pg_net_local")
+            .put("AD", "production-analyticsdaemonapp-???_mgmt_pg_net_local")
             .put("FR", "pg-frapp-???_mgmt_pg_net_local")
             .put("M$", "pg-mercapp-???_mgmt_pg_net_local")
             .put("BS", "production-bseapp-???_mgmt_pg_net_local")
